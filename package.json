@@ -48,10 +48,10 @@
     "silly",
     "fun"
   ],
-  "main": "nonsensical.js",
+  "main": "src/nonsensical.js",
   "scripts": {
-    "start": "node nonsensical.js",
-    "start:dev": "webpack-dev-server"
+    "start": "node src/npm-start.js",
+    "dev": "webpack-dev-server"
   },
   "dependencies": {
     "emojis-list": "^2.1.0",

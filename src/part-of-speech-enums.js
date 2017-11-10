@@ -23,7 +23,7 @@
 | AFFIX   | Affix                                      |
 +---------+--------------------------------------------+
 */
-export const TAG = {
+exports.TAG = {
 	UNKNOWN: "UNKNOWN",
     ADJ: "ADJ",
     ADP: "ADP",
@@ -49,7 +49,7 @@ export const TAG = {
 | REFLEXIVE_PERSON | Reflexive                                                              |
 +------------------+------------------------------------------------------------------------+
 */
-export const PERSON = {
+exports.PERSON = {
     PERSON_UNKNOWN: "PERSON_UNKNOWN",
     FIRST: "FIRST",
     SECOND: "SECOND",
@@ -65,7 +65,7 @@ export const PERSON = {
 | DUAL           | Dual                                                                   |
 +----------------+------------------------------------------------------------------------+
 */
-export const NUMBER = {
+exports.NUMBER = {
     NUMBER_UNKNOWN: "NUMBER_UNKNOWN",
     PLURAL: "PLURAL",
     SINGULAR: "SINGULAR",
@@ -79,7 +79,7 @@ export const NUMBER = {
 | NOT_PROPER     | Not proper                                                             |
 +----------------+------------------------------------------------------------------------+
 */
-export const PROPER = {
+exports.PROPER = {
     PROPER_UNKNOWN: "PROPER_UNKNOWN",
     PROPER: "PROPER",
     NOT_PROPER: "NOT_PROPER",
@@ -96,7 +96,7 @@ export const PROPER = {
 | PLUPERFECT        | Pluperfect                                                            |
 +-------------------+-----------------------------------------------------------------------+
 */
-export const TENSE = {
+exports.TENSE = {
     TENSE_UNKNOWN: "TENSE_UNKNOWN",
     CONDITIONAL_TENSE: "CONDITIONAL_TENSE",
     FUTURE: "FUTURE",

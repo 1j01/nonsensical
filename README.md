@@ -32,21 +32,16 @@ and it's themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/).
 
 ## Install
 
-Not published yet.
-
-<!-- `npm i nonsensical --save` -->
+`npm i nonsensical --save`
 
 ## API
 
-Not defined yet.
-
 ```js
-// var nonsensical = require("nonsensical");
-// var sentence = nonsensical.sentence();
+var nonsensical = require("nonsensical");
+var sentence = nonsensical.sentence();
 // var paragraph = nonsensical.paragraph();
 // var stanza = nonsensical.stanza();
 // var poem = nonsensical.poem();
-// var prose = nonsensical.prose();
 ```
 
 ## To-Do

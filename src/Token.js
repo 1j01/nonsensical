@@ -1,7 +1,7 @@
 /**
  * Represents the smallest syntactic building block of the text.
  */
-export default class Token {
+module.exports = class Token {
 	constructor({label, partOfSpeech, lemma, text}){
 		this.label = label;
 		this.partOfSpeech = partOfSpeech;

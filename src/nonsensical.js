@@ -1,11 +1,11 @@
-import pluralize from "pluralize";
-import emojis from "emojis-list";
+const pluralize = require("pluralize");
+const emojis = require("emojis-list");
 
-import tensify from "./tensify";
+const tensify = require("./tensify");
 
-import {choose, uppercase_first, get_indefinite_article} from "./helpers";
-import {TAG, NUMBER, TENSE} from "./part-of-speech-enums";
-import Token from "./Token";
+const {choose, uppercase_first, get_indefinite_article} = require("./helpers");
+const {TAG, NUMBER, TENSE} = require("./part-of-speech-enums");
+const Token = require("./Token");
 
 
 // some foobular words
@@ -122,16 +122,14 @@ const stringify_tokens_array = function(tokens){
 	return text;
 };
 
+const generate_sentence = function(){
+    const root_token = make_structure();
+    const tokens_array = make_flat_tokens_array_from_structure(root_token);
+    const sentence = uppercase_first(stringify_tokens_array(tokens_array));
+    return sentence;
+};
 
-const root_token = make_structure();
-console.log("root:", root_token);
-
-const tokens_array = make_flat_tokens_array_from_structure(root_token);
-console.log("tokens:", tokens_array);
-
-const sentence = uppercase_first(stringify_tokens_array(tokens_array));
-console.log("sentence:", sentence);
-
-if (typeof document !== "undefined") {
-    document.getElementById("output").textContent = sentence;
-}
+module.exports = generate_sentence;
+module.exports.sentence = generate_sentence;
+// module.exports.makeStructure = make_structure;
+// module.exports.flattenStructureIntoTokens = make_flat_tokens_array_from_structure;

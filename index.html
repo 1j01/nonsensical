@@ -8,18 +8,48 @@
 </head>
 <body>
 	<output id="output"></output>
+	<div id="buttons">
+		<!-- <button id="previous-one">
+			◀&#xFE0E; <!- - modifier prevents display as emoji - ->
+		</button> -->
+		<button id="another-one" class="primary">Generate</button>
+	</div>
 	<style>
 		body {
 			text-align: center;
 			max-width: 70em;
 			font-size: 12px;
-			margin: 20% auto;
-			margin: 40vh auto;
+			margin: auto;
+			margin-top: 40vh;
+			margin-bottom: 10vh;
 		}
 		output {
+			display: block;
+			margin: 1em;
 			font-size: 50px;
 		}
+		button {
+			user-select: none;
+			font-size: 35px;
+			line-height: 1;
+			background: rgb(228, 228, 228);
+			color: rgb(0, 0, 0);
+			/* border: 2px solid black; */
+			border: 0;
+			border-radius: 10px;
+			padding: 20px 20px;
+			margin: 5px;
+		}
+		button.primary {
+			background: rgb(0, 162, 255);
+			color: white;
+		}
+		button:focus {
+			outline: none;
+			box-shadow: 0 0 0 3px white, 0 0 0 6px orange;
+			box-shadow: 0 0 0 3px white, 0 0 0 6px Highlight;
+		}
 	</style>
-	<script src="build/bundle.js"></script>
+	<script src="build/app-bundle.js"></script>
 </body>
 </html>

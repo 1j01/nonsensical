@@ -1,0 +1,65 @@
+{
+  "name": "nonsensical",
+  "description": "Generate somewhat grammatical sentences of nonsense",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/1j01/nonsensical.git"
+  },
+  "bugs": {
+    "url": "http://github.com/1j01/nonsensical/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "sentence",
+    "sentences",
+    "sentence-generator",
+    "sentence-generation",
+    "text-generator",
+    "text-generation",
+    "generation",
+    "procedural-generation",
+    "procedural-content-generation",
+    "pcg",
+    "random",
+    "dummy",
+    "random-text",
+    "dummy-text",
+    "placeholder-text",
+    "placeholder",
+    "filler-text",
+    "filler",
+    "text",
+    "words",
+    "gibberish",
+    "giberish",
+    "nonsense",
+    "nonsensical",
+    "lorem-ipsum",
+    "lipsum",
+    "lorem",
+    "ipsum",
+    "grammatical",
+    "grammar",
+    "natural-language",
+    "language",
+    "english",
+    "lingual",
+    "silly",
+    "fun"
+  ],
+  "main": "nonsensical.js",
+  "scripts": {
+    "start": "node nonsensical.js",
+    "start:dev": "webpack-dev-server"
+  },
+  "dependencies": {
+    "emojis-list": "^2.1.0",
+    "natural": "^0.5.4",
+    "pluralize": "^7.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  }
+}

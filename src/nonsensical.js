@@ -16,7 +16,7 @@ const ADPZ = ["in", "in", "in", "on", "of"];
 const DETZ_PLURAL = ["some", "some", "those", "those", "the"]; // could include informal "them"/"dem"/"'em"
 const DETZ_SINGULAR = ["a", "an", "the"];
 
-const make_noun = function () {
+function make_noun () {
 	const noun = new Token({ partOfSpeech: { tag: TAG.NOUN } });
 	noun.lemma = choose(NOUNZ);
 	noun.partOfSpeech.number = choose([NUMBER.PLURAL, NUMBER.SINGULAR])
@@ -28,7 +28,7 @@ const make_noun = function () {
 	return noun;
 };
 
-const make_spicy_noun = function () {
+function make_spicy_noun () {
 	const noun = make_noun();
 	const initial_noun_text = stringify_tokens_array(make_flat_tokens_array_from_structure(noun));
 	const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
@@ -48,7 +48,7 @@ const make_spicy_noun = function () {
 	return noun;
 };
 
-const make_adpositional_phrase = function () {
+function make_adpositional_phrase () {
 	const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
 	const preposition_object_noun = make_spicy_noun();
 	preposition.lemma = choose(ADPZ);
@@ -56,8 +56,8 @@ const make_adpositional_phrase = function () {
 	return preposition;
 };
 
-const make_verb = function () {
-	const verb = new Token({ label: "root", partOfSpeech: { tag: TAG.VERB } });
+function make_verb () {
+	const verb = new Token({ partOfSpeech: { tag: TAG.VERB } });
 	verb.lemma = choose(VERBZ);
 	if (Math.random() < 0.5) {
 		verb.text = tensify(verb.lemma).past;
@@ -68,8 +68,9 @@ const make_verb = function () {
 	return verb;
 };
 
-const make_structure = function () {
+function make_structure () {
 	const root_verb = make_verb();
+	root_verb.label = "root";
 	const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
 	const ending_emoji = new Token({ partOfSpeech: { tag: TAG.X }, text: choose(emojis) });
 	root_verb.addDependency(make_spicy_noun(), "nsubj");
@@ -80,7 +81,7 @@ const make_structure = function () {
 	return root_verb;
 };
 
-var make_flat_tokens_array_from_structure = function (token) {
+function make_flat_tokens_array_from_structure (token) {
 	let tokens = [token];
 	for (let dep_token of token.dependencies) {
 		const dep_flattened_tokens = make_flat_tokens_array_from_structure(dep_token);
@@ -106,7 +107,7 @@ var make_flat_tokens_array_from_structure = function (token) {
 	return tokens;
 };
 
-const stringify_tokens_array = function (tokens) {
+function stringify_tokens_array (tokens) {
 	let text = "";
 	for (let index = 0; index < tokens.length; index++) {
 		const token = tokens[index];
@@ -122,7 +123,7 @@ const stringify_tokens_array = function (tokens) {
 	return text;
 };
 
-const generate_sentence = function () {
+function generate_sentence () {
 	const root_token = make_structure();
 	const tokens_array = make_flat_tokens_array_from_structure(root_token);
 	const sentence = uppercase_first(stringify_tokens_array(tokens_array));

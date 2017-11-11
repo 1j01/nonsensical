@@ -1,2 +1,2 @@
-const {generateSentence} = require("./nonsensical");
-console.log(generateSentence());
+const {sentence} = require("./nonsensical");
+console.log(sentence());

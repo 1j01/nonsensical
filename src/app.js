@@ -1,17 +1,17 @@
-const {sentence} = require("./nonsensical");
+const { sentence } = require("./nonsensical");
 
 const output_el = document.getElementById("output");
 const another_one_button = document.getElementById("another-one");
 // const previous_one_button = document.getElementById("previous-one");
 
-const another_one = ()=> {
+const another_one = () => {
 	location.hash = sentence();
 };
-const render_from_hash = ()=> {
-	output_el.textContent = decodeURIComponent(location.hash.replace("#", ""));	
+const render_from_hash = () => {
+	output_el.textContent = decodeURIComponent(location.hash.replace("#", ""));
 };
 
-if(location.hash.length <= 1){
+if (location.hash.length <= 1) {
 	another_one();
 }
 

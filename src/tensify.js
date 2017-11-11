@@ -11,7 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 const PresentVerbInflector = require('natural/lib/natural/inflectors/present_verb_inflector');
 const find_irregular_verb = require('./tensify-irregular-verbs');
-const {is_consonant_excluding_y, is_vowel_including_y} = require('./helpers');
+const { is_consonant_excluding_y, is_vowel_including_y } = require('./helpers');
 
 const present_inflector = new PresentVerbInflector();
 

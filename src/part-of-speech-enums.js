@@ -25,19 +25,19 @@
 */
 exports.TAG = {
 	UNKNOWN: "UNKNOWN",
-    ADJ: "ADJ",
-    ADP: "ADP",
-    ADV: "ADV",
-    CONJ: "CONJ",
-    DET: "DET",
-    NOUN: "NOUN",
-    NUM: "NUM",
-    PRON: "PRON",
-    PRT: "PRT",
-    PUNCT: "PUNCT",
-    VERB: "VERB",
-    X: "X",
-    AFFIX: "AFFIX",
+	ADJ: "ADJ",
+	ADP: "ADP",
+	ADV: "ADV",
+	CONJ: "CONJ",
+	DET: "DET",
+	NOUN: "NOUN",
+	NUM: "NUM",
+	PRON: "PRON",
+	PRT: "PRT",
+	PUNCT: "PUNCT",
+	VERB: "VERB",
+	X: "X",
+	AFFIX: "AFFIX",
 };
 
 /**
@@ -50,11 +50,11 @@ exports.TAG = {
 +------------------+------------------------------------------------------------------------+
 */
 exports.PERSON = {
-    PERSON_UNKNOWN: "PERSON_UNKNOWN",
-    FIRST: "FIRST",
-    SECOND: "SECOND",
-    THIRD: "THIRD",
-    REFLEXIVE_PERSON: "REFLEXIVE_PERSON",
+	PERSON_UNKNOWN: "PERSON_UNKNOWN",
+	FIRST: "FIRST",
+	SECOND: "SECOND",
+	THIRD: "THIRD",
+	REFLEXIVE_PERSON: "REFLEXIVE_PERSON",
 };
 
 /**
@@ -66,10 +66,10 @@ exports.PERSON = {
 +----------------+------------------------------------------------------------------------+
 */
 exports.NUMBER = {
-    NUMBER_UNKNOWN: "NUMBER_UNKNOWN",
-    PLURAL: "PLURAL",
-    SINGULAR: "SINGULAR",
-    DUAL: "DUAL",
+	NUMBER_UNKNOWN: "NUMBER_UNKNOWN",
+	PLURAL: "PLURAL",
+	SINGULAR: "SINGULAR",
+	DUAL: "DUAL",
 };
 
 /**
@@ -80,9 +80,9 @@ exports.NUMBER = {
 +----------------+------------------------------------------------------------------------+
 */
 exports.PROPER = {
-    PROPER_UNKNOWN: "PROPER_UNKNOWN",
-    PROPER: "PROPER",
-    NOT_PROPER: "NOT_PROPER",
+	PROPER_UNKNOWN: "PROPER_UNKNOWN",
+	PROPER: "PROPER",
+	NOT_PROPER: "NOT_PROPER",
 };
 
 /**
@@ -97,11 +97,11 @@ exports.PROPER = {
 +-------------------+-----------------------------------------------------------------------+
 */
 exports.TENSE = {
-    TENSE_UNKNOWN: "TENSE_UNKNOWN",
-    CONDITIONAL_TENSE: "CONDITIONAL_TENSE",
-    FUTURE: "FUTURE",
-    PAST: "PAST",
-    PRESENT: "PRESENT",
-    IMPERFECT: "IMPERFECT",
-    PLUPERFECT: "PLUPERFECT",
+	TENSE_UNKNOWN: "TENSE_UNKNOWN",
+	CONDITIONAL_TENSE: "CONDITIONAL_TENSE",
+	FUTURE: "FUTURE",
+	PAST: "PAST",
+	PRESENT: "PRESENT",
+	IMPERFECT: "IMPERFECT",
+	PLUPERFECT: "PLUPERFECT",
 };

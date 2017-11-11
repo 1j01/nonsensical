@@ -191,7 +191,7 @@ var irregular_verbs = [
 ];
 
 // Returns array [past_simple, past_participle]
-var find = function(verb) {
+var find = function (verb) {
 	for (var i in irregular_verbs) {
 		if (irregular_verbs[i].indexOf(verb) !== -1) {
 			return irregular_verbs[i].slice(-2);

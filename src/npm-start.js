@@ -1,2 +1,2 @@
-const {sentence} = require("./nonsensical");
+const { sentence } = require("./nonsensical");
 console.log(sentence());

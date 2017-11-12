@@ -1,3 +1,4 @@
+const Wordnet = require("wordnetjs");
 const pluralize = require("pluralize");
 
 const tensify = require("./tensify");
@@ -15,9 +16,46 @@ const ADPZ = ["in", "in", "in", "on", "of"];
 const DETZ_PLURAL = ["some", "some", "those", "those", "the"]; // could include informal "them"/"dem"/"'em"
 const DETZ_SINGULAR = ["a", "an", "the"];
 
-function make_noun () {
+// @HACK @XXX
+// @TODO make things class methods instead or whatever
+let wordnet;
+
+// function take_one_step_away_semantically() {
+
+// }
+
+// const TAG_to_WordNet_POS = {
+// 	[TAG.NOUN]: "noun",
+// 	[TAG.VERB]: "verb",
+// 	[TAG.ADV]: "adverb",
+// 	[TAG.ADJ]: "adjective"
+// };
+
+function find_a_word(part_of_speech, search_base_terms, semantic_removal_depth=0) {
+	// const part_of_speech = TAG_to_WordNet_POS[tag];
+	let tries = 0;
+	const max_tries = 5;
+	const max_semantic_removal_depth = 2;
+	for(let i=0;i<max_tries;i++){
+		let search_base = choose(search_base_terms);
+		let results = wordnet.lookup(search_base, part_of_speech);
+		// console.log(results);
+		if(results.length > 0){
+			let result = choose(results);
+			let word = choose(result.words);
+			// TODO: maybe flatten this and do a random number of semantic removals (including zero)
+			if(Math.random() < 0.5 && semantic_removal_depth < max_semantic_removal_depth){
+				return find_a_word(part_of_speech, [word], semantic_removal_depth + 1);
+			}
+			return word;
+		}
+	}
+	return choose(NOUNZ);
+}
+
+function make_noun() {
 	const noun = new Token({ partOfSpeech: { tag: TAG.NOUN } });
-	noun.lemma = choose(NOUNZ);
+	noun.lemma = find_a_word("noun", NOUNZ);
 	noun.partOfSpeech.number = choose([NUMBER.PLURAL, NUMBER.SINGULAR])
 	if (noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL) {
 		noun.text = pluralize.plural(noun.lemma);
@@ -27,7 +65,7 @@ function make_noun () {
 	return noun;
 };
 
-function make_spicy_noun () {
+function make_spicy_noun() {
 	const noun = make_noun();
 	const initial_noun_text = stringify_tokens_array(make_flat_tokens_array_from_structure(noun));
 	const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
@@ -47,7 +85,7 @@ function make_spicy_noun () {
 	return noun;
 };
 
-function make_adpositional_phrase () {
+function make_adpositional_phrase() {
 	const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
 	const preposition_object_noun = make_spicy_noun();
 	preposition.lemma = choose(ADPZ);
@@ -55,9 +93,9 @@ function make_adpositional_phrase () {
 	return preposition;
 };
 
-function make_verb () {
+function make_verb() {
 	const verb = new Token({ partOfSpeech: { tag: TAG.VERB } });
-	verb.lemma = choose(VERBZ);
+	verb.lemma = find_a_word("verb", VERBZ);
 	if (Math.random() < 0.5) {
 		verb.text = tensify(verb.lemma).past;
 		// console.log(token.lemma, irregular(verb.lemma));
@@ -67,7 +105,7 @@ function make_verb () {
 	return verb;
 };
 
-function make_structure () {
+function make_structure() {
 	const root_verb = make_verb();
 	root_verb.label = "root";
 	const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
@@ -78,7 +116,7 @@ function make_structure () {
 	return root_verb;
 };
 
-function make_flat_tokens_array_from_structure (token) {
+function make_flat_tokens_array_from_structure(token) {
 	let tokens = [token];
 	for (let dep_token of token.dependencies) {
 		const dep_flattened_tokens = make_flat_tokens_array_from_structure(dep_token);
@@ -104,7 +142,7 @@ function make_flat_tokens_array_from_structure (token) {
 	return tokens;
 };
 
-function stringify_tokens_array (tokens) {
+function stringify_tokens_array(tokens) {
 	let text = "";
 	for (let index = 0; index < tokens.length; index++) {
 		const token = tokens[index];
@@ -120,14 +158,28 @@ function stringify_tokens_array (tokens) {
 	return text;
 };
 
-function generate_sentence () {
+function generate_sentence() {
+	if(!wordnet){
+		// throw new Error("WordNet data must be loaded first");
+		throw new Error("Something bad happened, a variable didn't get set.");
+	}
 	const root_token = make_structure();
 	const tokens_array = make_flat_tokens_array_from_structure(root_token);
 	const sentence = uppercase_first(stringify_tokens_array(tokens_array));
 	return sentence;
 };
 
-module.exports = generate_sentence;
-module.exports.sentence = generate_sentence;
-// module.exports.makeStructure = make_structure;
-// module.exports.flattenStructureIntoTokens = make_flat_tokens_array_from_structure;
+class Nonsensical {
+	constructor() {
+		this.wordnet = new Wordnet();
+	}
+	load(files, callback) {
+		this.wordnet.load(files, callback);
+	}
+	generateSentence() {
+		wordnet = this.wordnet;
+		return generate_sentence();
+	}
+}
+
+module.exports = Nonsensical;

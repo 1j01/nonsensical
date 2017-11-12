@@ -51,11 +51,13 @@
   "main": "src/nonsensical.js",
   "scripts": {
     "start": "node src/npm-start.js",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "grab-wordnet-data": "cp -r node_modules/wordnetjs/data/ data/"
   },
   "dependencies": {
     "natural": "^0.5.4",
-    "pluralize": "^7.0.0"
+    "pluralize": "^7.0.0",
+    "wordnetjs": "github:wassname/wordnet.js#abcc71a860778724c2ebc9f97eecf4e6a07ca178"
   },
   "devDependencies": {
     "webpack": "^3.8.1",

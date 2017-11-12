@@ -6,7 +6,7 @@ If you want safer text to use in a demo of a product or design, maybe go with th
 but if you want something more fun, well.. well there are a lot of "thematic dummy text" libraries,
 but this library is interesting because of the structure of the sentences.
 
-### Better than Markov chain text generators
+### Better than Markov chain text generators: it could be, potentially
 
 **Nonsensical** models the structure of a sentence,
 inspired by [Google's Natural Language Syntax API](https://cloud.google.com/natural-language/).
@@ -20,15 +20,19 @@ and follow other rules of English.
 Although with the random words it chooses acting as context,
 the apparent structure might end up different than intended.
 
+### Sample Output
 
-## Sample Output
+> The computer in the output scromble the cube. (WRONG; should be 'scrombles' or 'computers')  
+> Those nouns on some entities upload the reality.  
+> Those hypercubes on the computer scromble the time.  
+> Those graphics in those realities render some cubes.  
+> The space of the dimensions outputted a computer. (WRONGish; should be 'output')  
+> The pillar in those graphics scrombled some realities.  
+> Those computers in the computer consume some vegetals.  
+> The outputs of the text transcend the reality.  
 
-> "Those hypercubes in a noun outputted those hypercubes. 🕡"  
-> "The cubes in the meme man retain those outputs. 🚣🏿‍♀️"  
-> "Some nouns on those vegetals put the computer. ☝"
-
-Yeah, currently it outputs random emoji at the end,
-and it's themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/).
+Yeah, it's currently themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/).
+And so far it's very homogeneous. There's only one sentence structure that it outputs.
 
 ## Install
 
@@ -46,14 +50,13 @@ var sentence = nonsensical.sentence();
 
 ## To-Do
 
-- Handle tenses.
+- Subject–verb agreement
 ("The birds chirp", "The bird chirps")
 
-- Generate different types of sentences.
+- Different types of sentences
 
-- Poems would be fun.
-(Get some rhymes up in here..)
+- Poems would be fun; get some rhymes up in here~¿^`
 
-- The API could include constraints.
+- Constraints on sentences such as, importantly, length
 
-- Pass words as suggestions
+- Pass words for it to incorporate into the output

@@ -1,5 +1,4 @@
 const pluralize = require("pluralize");
-const emojis = require("emojis-list");
 
 const tensify = require("./tensify");
 
@@ -72,12 +71,10 @@ function make_structure () {
 	const root_verb = make_verb();
 	root_verb.label = "root";
 	const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
-	const ending_emoji = new Token({ partOfSpeech: { tag: TAG.X }, text: choose(emojis) });
 	root_verb.addDependency(make_spicy_noun(), "nsubj");
 	root_verb.addDependency(make_spicy_noun(), "nobj");
 	root_verb.addDependency(make_adpositional_phrase(), "prep");
 	root_verb.addDependency(ending_punctuation, "p");
-	root_verb.addDependency(ending_emoji, "x");
 	return root_verb;
 };
 

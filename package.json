@@ -54,7 +54,6 @@
     "dev": "webpack-dev-server"
   },
   "dependencies": {
-    "emojis-list": "^2.1.0",
     "natural": "^0.5.4",
     "pluralize": "^7.0.0"
   },

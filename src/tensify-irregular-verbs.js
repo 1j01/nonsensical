@@ -1,4 +1,4 @@
-/* Taken from: https://github.com/boo1ean/tensify
+/* Based on: https://github.com/boo1ean/tensify
 
 Copyright 2014 Egor Gumenyuk
 
@@ -14,9 +14,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // All elements before are present
 var irregular_verbs = [
 	['awake', 'awoke', 'awoken'],
+	['be', 'been', 'been'], // past simple should be was/were depending on plurality; this been done be a compromise
 	['bear', 'bore', 'born'],
 	['beat', 'beat', 'beat'],
 	['become', 'became', 'become'],
+	['beget', 'begot', 'begotten'],
 	['begin', 'began', 'begun'],
 	['bend', 'bent', 'bent'],
 	['beset', 'beset', 'beset'],
@@ -73,6 +75,7 @@ var irregular_verbs = [
 	['grind', 'ground', 'ground'],
 	['grow', 'grew', 'grown'],
 	['hang', 'hung', 'hung'],
+	['have', 'had', 'had'],
 	['hear', 'heard', 'heard'],
 	['hide', 'hid', 'hidden'],
 	['hit', 'hit', 'hit'],
@@ -102,6 +105,7 @@ var irregular_verbs = [
 	['overdo', 'overdid', 'overdone'],
 	['overtake', 'overtook', 'overtaken'],
 	['overthrow', 'overthrew', 'overthrown'],
+	['output', 'output', 'outputted'],
 	['pay', 'paid', 'paid'],
 	['plead', 'pled', 'pled'],
 	['prove', 'proved', 'proved'],

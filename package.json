@@ -51,9 +51,12 @@
   "main": "src/nonsensical.js",
   "scripts": {
     "start": "node src/npm-start.js",
+    "grab-wordnet-data": "cp -r node_modules/wordnetjs/data/ data/",
+    "grab-wordnet-data-for-app": "cp -r node_modules/wordnetjs/data/ app/data/",
     "dev": "webpack-dev-server",
     "build-app": "webpack",
-    "grab-wordnet-data": "cp -r node_modules/wordnetjs/data/ data/"
+    "predeploy-app": "webpack",
+    "deploy-app": "butler push app 1j01/nonsensical:app"
   },
   "dependencies": {
     "natural": "^0.5.4",

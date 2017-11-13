@@ -2,9 +2,18 @@
 # Nonsensical
 
 Generates English sentences that are somewhat grammatically correct, or at least grammatically structured.
-There are lots of lorem ipsum libraries, and "thematic dummy text" libraries; there are Markov chain text generators.
 
-### Better than Markov chain text generators: it could be, potentially
+[Try it out on itch.io!](https://1j01.itch.io/nonsensical)
+
+There are lots of lorem ipsum libraries, and ["thematic dummy text" generators](http://mashable.com/2013/07/11/lorem-ipsum/#VAftGtFa0iq9); there are Markov chain text generators.
+But they're all lacking in structure, usually entirely.
+There's [RNNs](https://en.wikipedia.org/wiki/Recurrent_neural_network), which [are cool](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) and model structure, but they're much less accessible currently.
+I haven't found any webpages where you can train one, for instance.
+
+Nonsensical gives you structure, you know, something to hold on to, a banister,
+and a banner, a banner with weird text written on it, that you can wave in the air.
+
+### Better than Markov chain text generators: it can be
 
 **Nonsensical** models the structure of a sentence,
 inspired by [Google's Natural Language Syntax API](https://cloud.google.com/natural-language/).
@@ -37,12 +46,13 @@ So far it's somewhat homogeneous. There's only *one sentence structure* output!
 (DET NOUN PREP DET NOUN VERB DET NOUN PUNCT)
 
 But it's already fun.
-It's currently seeded with words themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/)
-and computers, and a few grammar terms.
+In [the app](https://1j01.itch.io/nonsensical) currently uses seed words themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/)
+and computers.
 
 ## Install
 
 `npm i nonsensical --save`
+
 
 ## API
 
@@ -62,6 +72,8 @@ cross-platform-ness of the copy command,
 location of the module that has the data (might be in a sub node_modules folder? depending on npm version?),
 when postinstall runs
 
+maybe this package could provide a bin script to copy the wordnet data to a directory..
+
 In Node it should really use the [version of wordnet.js](https://github.com/nlp-compromise/wordnet.js)
 not [forked and ported for browser usage](https://github.com/wassname/wordnet.js).
 Currently the API works using webpack (and should work with browserify or other bundlers),
@@ -77,23 +89,68 @@ var dataFilePaths = {
 	adjective: './data/adjective.json',
 	verb: './data/verb.json',
 };
-nonsensical.load(dataFilePaths, function(){
+nonsensical.load(dataFilePaths, function () {
+	// generate a sentence!
 	console.log(nonsensical.generateSentence());
+	// generate a sentence related to felines!
+	console.log(nonsensical.generateSentence({
+		wordSuggestions: {
+			nouns: ["cat", "kitty", "mouse", "fur", "bird", "house"],
+			verbs: ["purr", "pet", "hiss", "catch", "chase", "sleep"],
+			adjectives: ["soft", "warm"] // not used yet!
+		},
+		useSuggestionRelatedWordChance: 1/2,
+		maxSemanticStepsRemovedFromSuggestions: 3
+	}));
 });
-// look how simple the API could maybe have been, ideally:
-// var sentence = nonsensical.sentence();
-// var paragraph = nonsensical.paragraph();
-// var stanza = nonsensical.stanza();
-// var poem = nonsensical.poem();
 ```
 
-## To-Do
 
-- Pass words for it to incorporate into the output! This could be implemented easily now!
+### nonsensical.load(dataFilePaths, callback)
+
+Loads WordNet data from the given file paths.
+
+You wait for the callback before calling `generateSentence`.
+
+### nonsensical.generateSentence(options)
+
+All options are optional, including the options argument itself.
+
+#### options.wordSuggestions
+
+*Default: a built in map of word lists*
+
+Suggestions for words to be incorporated into the output,
+sort of like "topics" when semantic removal steps are enabled.
+Should be an object with keys `nouns`, `verbs`, `adjectives`, `adverbs`, or a subset,
+with arrays of words as values.
+
+#### options.useSuggestionRelatedWordChance
+
+*Default: 1*
+
+A chance between 0 and 1 of using a one of your suggested words,
+versus a word from the default word lists.
+
+#### options.maxSemanticStepsRemovedFromSuggestions
+
+*Default: 0*
+
+If this is 1 or higher, Nonsensical will traverse WordNet synonym to synonym,
+taking *up to this number of steps* away from the original word.
+
+It *won't* take a *linearly* random number of steps away from the original word though, currently.
+
+
+## To-Do
 
 - Different types of sentences! Different structures!
 
 - Make the API work reasonably for Node again
+
+- Make a standalone build for browsers so you don't have to use a bundler
+
+- Stuff mentioned in source code (TODO, FIXME)
 
 - Poems would be fun; get some rhymes up in here~~?
 

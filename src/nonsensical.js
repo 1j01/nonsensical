@@ -2,41 +2,54 @@ const Wordnet = require("wordnetjs");
 const pluralize = require("pluralize");
 
 const tensify = require("./tensify");
-const tensify_verb_phrase = (verb_phrase, form)=> 
+const tensify_verb_phrase = (verb_phrase, form) =>
 	verb_phrase.split(" ").map(
 		(word, index) => index === 0 ? tensify(word)[form] : word
 	).join(" ");
 
 const { choose, uppercase_first, get_indefinite_article } = require("./helpers");
 const { TAG, NUMBER, TENSE } = require("./part-of-speech-enums");
+const default_word_suggestions = require("./default-word-suggestions");
 const Token = require("./Token");
 
-
-// some foobular words
-const VERBZ = ["parse", "output", "retain", "generate", "put", "display", "render", "upload", "consume", "transcend", "assemble", "scromble", "scronch", "become"];
-const NOUNZ = ["noun", "verb", "output", "code", "graphic", "computer", "text", "orang", "meme man", "vegetal", "cube", "dimension", "hypercube", "pillar", "space", "time", "reality", "entity", "void"];
-const ADJZ = ["amazing", "boring", "nonsensical", "silly", "lame", "orange", "aesthetic", "surreal", "hyperdimensional", "human"];
-const ADPZ = ["in", "in", "in", "on", "of"];
-const DETZ_PLURAL = ["some", "some", "those", "those", "the"]; // could include informal "them"/"dem"/"'em"
-const DETZ_SINGULAR = ["a", "an", "the"];
-
+const default_use_suggestion_related_word_chance = 1;
+const default_max_semantic_steps_removed_from_suggestions = 0;
 
 class Nonsensical {
 	constructor() {
 		this._wordnet = new Wordnet();
 	}
 	load(files, callback) {
+		// TODO: error handling
+		// the promise version of this probably implicitly supports error handling
 		this._wordnet.load(files, callback);
 	}
-	generateSentence() {
+	generateSentence(options = {}) {
+		this._word_suggestions = Object.assign({}, default_word_suggestions, options.wordSuggestions);
+		this._use_suggestion_related_word_chance = options.useSuggestionRelatedWordChance != null ?
+			options.useSuggestionRelatedWordChance : default_use_suggestion_related_word_chance;
+		this._max_semantic_steps_removed_from_suggestions = options.maxSemanticStepsRemovedFromSuggestions != null ?
+			options.maxSemanticStepsRemovedFromSuggestions : default_max_semantic_steps_removed_from_suggestions;
+
 		return this._generate_sentence();
 	}
 
 	_find_a_word(part_of_speech, search_base_terms, semantic_removal_depth = 0) {
-		// const part_of_speech = TAG_to_WordNet_POS[tag];
+		if (!search_base_terms) {
+			// const word_suggestions_key = tag_to_suggestions_part_of_speech[tag];
+			const word_suggestions_key = part_of_speech + "s";
+			if (Math.random() < this._use_suggestion_related_word_chance) {
+				search_base_terms = this._word_suggestions[word_suggestions_key];
+			} else {
+				search_base_terms = default_word_suggestions[word_suggestions_key];
+			}
+		}
+		if (this._max_semantic_steps_removed_from_suggestions < 1) {
+			return choose(search_base_terms);
+		}
+		// const part_of_speech = tag_to_wordnet_part_of_speech[tag];
 		let tries = 0;
 		const max_tries = 5;
-		const max_semantic_removal_depth = 20;
 		for (let i = 0; i < max_tries; i++) {
 			let search_base = choose(search_base_terms);
 			let results = this._wordnet.lookup(search_base, part_of_speech);
@@ -45,7 +58,7 @@ class Nonsensical {
 				let result = choose(results);
 				let word = choose(result.words);
 				// TODO: maybe flatten this and do a random number of semantic removals (including zero)
-				if (Math.random() < 0.5 && semantic_removal_depth < max_semantic_removal_depth) {
+				if (Math.random() < 0.5 && semantic_removal_depth < this._max_semantic_steps_removed_from_suggestions) {
 					return this._find_a_word(part_of_speech, [word], semantic_removal_depth + 1);
 				}
 				return word;
@@ -57,7 +70,7 @@ class Nonsensical {
 	_make_noun() {
 		const noun = new Token({ partOfSpeech: { tag: TAG.NOUN } });
 		// TODO: make sure lemmas are lemmas
-		noun.lemma = this._find_a_word("noun", NOUNZ);
+		noun.lemma = this._find_a_word("noun");
 		noun.partOfSpeech.number = choose([NUMBER.PLURAL, NUMBER.SINGULAR])
 		if (noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL) {
 			noun.text = pluralize.plural(noun.lemma);
@@ -73,10 +86,9 @@ class Nonsensical {
 		const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
 		noun.addDependency(determiner, "det");
 		if (noun.partOfSpeech.number === NUMBER.PLURAL) {
-			determiner.text = choose(DETZ_PLURAL);
+			determiner.text = choose(["some", "some", "those", "those", "the"]); // could include informal "them"/"dem"/"'em"
 			// console.log(`using plural determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
 		} else {
-			// determiner.text = choose(DETZ_SINGULAR);
 			if (Math.random() < 0.5) {
 				determiner.text = get_indefinite_article(initial_noun_text);
 			} else {
@@ -90,14 +102,14 @@ class Nonsensical {
 	_make_adpositional_phrase() {
 		const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
 		const preposition_object_noun = this._make_spicy_noun();
-		preposition.lemma = choose(ADPZ);
+		preposition.lemma = choose(["in", "in", "in", "on", "of"]);
 		preposition.addDependency(preposition_object_noun, "pobj");
 		return preposition;
 	};
 
 	_make_verb() {
 		const verb = new Token({ partOfSpeech: { tag: TAG.VERB } });
-		verb.lemma = this._find_a_word("verb", VERBZ);
+		verb.lemma = this._find_a_word("verb");
 		// TODO: this should probably be at a later step,
 		// since it has to get overridden later in at least one case
 		if (Math.random() < 0.5) {

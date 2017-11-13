@@ -1,7 +1,8 @@
 const Nonsensical = require("./nonsensical");
 const nonsensical = new Nonsensical();
 
-const output_el = document.getElementById("output");
+const loading_indicator = document.getElementById("loading-indicator");
+const output_container = document.getElementById("output");
 const another_one_button = document.getElementById("another-one");
 // const previous_one_button = document.getElementById("previous-one");
 
@@ -11,7 +12,14 @@ const data_file_paths = {
 	adjective: './data/adjective.json',
 	verb: './data/verb.json',
 };
+
+loading_indicator.removeAttribute("hidden");
 nonsensical.load(data_file_paths, function(){
+	loading_indicator.setAttribute("hidden", "hidden");
+
+	const output_el = document.createElement("p");
+	output_container.appendChild(output_el);
+
 	const another_one = () => {
 		location.hash = nonsensical.generateSentence();
 	};

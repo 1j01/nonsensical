@@ -52,6 +52,7 @@
   "scripts": {
     "start": "node src/npm-start.js",
     "dev": "webpack-dev-server",
+    "build-app": "webpack",
     "grab-wordnet-data": "cp -r node_modules/wordnetjs/data/ data/"
   },
   "dependencies": {

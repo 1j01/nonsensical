@@ -7,26 +7,59 @@
 	<title>Nonsensical text generator</title>
 </head>
 <body>
-	<output id="output"></output>
-	<div id="buttons">
-		<!-- <button id="previous-one">
-			◀&#xFE0E; <!- - modifier prevents display as emoji - ->
-		</button> -->
-		<button id="another-one" class="primary">Generate</button>
+	<div id="loading-indicator" hidden>
+		Loading...
+	</div>
+	<div id="app">
+		<div id="output"></div>
+		<div id="controls">
+			<!-- <div id="extra-controls">
+				<input type="text" value="" />
+			</div> -->
+			<!-- <button id="previous-one">
+				◀&#xFE0E; <!- - modifier prevents display as emoji - ->
+			</button> -->
+			<button id="another-one" class="primary">Generate</button>
+		</div>
 	</div>
 	<style>
+		#loading-indicator {
+			position: absolute;
+			margin: auto;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			/* top: 10%; */
+			font-size: 3em;
+			height: 1em;
+		}
 		body {
 			text-align: center;
-			max-width: 70em;
-			font-size: 12px;
-			margin: auto;
-			margin-top: 40vh;
-			margin-bottom: 10vh;
+			background: white; /* for itch.io */
+			color: black;
 		}
-		output {
-			display: block;
+		html, body, #app {
+			height: 100%;
+			margin: 0;
+		}
+		#app {
+			display: flex;
+			flex-direction: column;
+		}
+		#output {
+			align-self: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			/* justify-content: flex-end; */
 			margin: 1em;
 			font-size: 50px;
+			max-width: 20em;
+			flex: 4;
+		}
+		#controls {
+			flex: 1 0 auto;
 		}
 		button {
 			user-select: none;
@@ -43,6 +76,16 @@
 		button.primary {
 			background: rgb(0, 162, 255);
 			color: white;
+		}
+		button:active {
+			/* FIXME: affects clickable area; it can appear you click on it but not work */
+			transform: translate(0, 3px);
+			box-shadow: 0 0 0 3px white, 0 0 0 6px lime !important;
+		}
+		button.primary:active {
+			background: lime;
+			color: black;
+			text-shadow: 1px 2px 0 white;
 		}
 		button:focus {
 			outline: none;

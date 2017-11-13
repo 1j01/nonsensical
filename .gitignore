@@ -1,5 +1,6 @@
 
 build/
+*.zip
 data/
 node_modules/
 

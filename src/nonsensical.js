@@ -47,7 +47,7 @@ class Nonsensical {
 				return word;
 			}
 		}
-		return choose(NOUNZ); // FIXME: should be search_base_terms
+		return choose(search_base_terms);
 	}
 
 	_make_noun() {

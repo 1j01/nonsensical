@@ -9,10 +9,10 @@ There are lots of lorem ipsum libraries, and "thematic dummy text" libraries; th
 **Nonsensical** models the structure of a sentence,
 inspired by [Google's Natural Language Syntax API](https://cloud.google.com/natural-language/).
 
-This way it can make verbs' and nouns' plurality match up,
-for example "The birds chirp" or "The bird chirps",
+This way it can do subject–verb agreement,
+for example "The birds chirp" vs "The bird chirps",
 and make articles and other determiners match up,
-for example "a/the bird" or "some/those/the birds",
+for example "a/the bird" vs "some/those/the birds",
 and follow other rules of English.
 
 Although with the random words it chooses acting as context,
@@ -25,9 +25,13 @@ the apparent structure might end up different than intended.
 > The noun in those spaces exhibitted the pragmatism.  
 > A world on the dimension placed the metres.  
 > Those regular hexahedra in the distances scromble some times.  
-> An orangutan on the entities father some computer codes. (wrong: should be "orangutans" or "fathers" (or "fathered"))  
-> A code in the computing machine translate some voids. (wrong: should be "codes" or "translates" ("or translated"))
+> A reckoner on those third powers frames the noun.
+> Some entities in some cubes render the electronic computer.
+> The graphic in those cubes uploads an attribute.
+> Those texts in the texts bring forth those spaces.
 > Those pillars in a data processor became an orang.
+> The production on the outputs goes past a Pongo pygmaeus.
+> Some anchors in the turnouts transgress the reality.
 
 So far it's somewhat homogeneous. There's only *one sentence structure* output!
 (DET NOUN PREP DET NOUN VERB DET NOUN PUNCT)
@@ -76,7 +80,7 @@ var dataFilePaths = {
 nonsensical.load(dataFilePaths, function(){
 	console.log(nonsensical.generateSentence());
 });
-// look how simple the API could have maybe been ideally:
+// look how simple the API could maybe have been, ideally:
 // var sentence = nonsensical.sentence();
 // var paragraph = nonsensical.paragraph();
 // var stanza = nonsensical.stanza();
@@ -85,12 +89,11 @@ nonsensical.load(dataFilePaths, function(){
 
 ## To-Do
 
-- Pass words for it to incorporate into the output! This can be done easily now!
+- Pass words for it to incorporate into the output! This could be implemented easily now!
 
-- Subject–verb agreement
-("The birds chirp", "The bird chirps")
+- Different types of sentences! Different structures!
 
-- Different types of sentences
+- Make the API work reasonably for Node again
 
 - Poems would be fun; get some rhymes up in here~~?
 

@@ -107,7 +107,9 @@ const tensify = function (verb) {
 
 	return {
 		past: past,
-		past_participle: past_participle
+		past_participle: past_participle,
+		present_plural: verb,
+		present_singular: present_inflector.singularize(verb),
 	};
 };
 

@@ -2,6 +2,10 @@ const Wordnet = require("wordnetjs");
 const pluralize = require("pluralize");
 
 const tensify = require("./tensify");
+const tensify_verb_phrase = (verb_phrase, form)=> 
+	verb_phrase.split(" ").map(
+		(word, index) => index === 0 ? tensify(word)[form] : word
+	).join(" ");
 
 const { choose, uppercase_first, get_indefinite_article } = require("./helpers");
 const { TAG, NUMBER, TENSE } = require("./part-of-speech-enums");
@@ -27,21 +31,21 @@ class Nonsensical {
 	generateSentence() {
 		return this._generate_sentence();
 	}
-	
-	_find_a_word(part_of_speech, search_base_terms, semantic_removal_depth=0) {
+
+	_find_a_word(part_of_speech, search_base_terms, semantic_removal_depth = 0) {
 		// const part_of_speech = TAG_to_WordNet_POS[tag];
 		let tries = 0;
 		const max_tries = 5;
-		const max_semantic_removal_depth = 2;
-		for(let i=0;i<max_tries;i++){
+		const max_semantic_removal_depth = 20;
+		for (let i = 0; i < max_tries; i++) {
 			let search_base = choose(search_base_terms);
 			let results = this._wordnet.lookup(search_base, part_of_speech);
 			// console.log(results);
-			if(results.length > 0){
+			if (results.length > 0) {
 				let result = choose(results);
 				let word = choose(result.words);
 				// TODO: maybe flatten this and do a random number of semantic removals (including zero)
-				if(Math.random() < 0.5 && semantic_removal_depth < max_semantic_removal_depth){
+				if (Math.random() < 0.5 && semantic_removal_depth < max_semantic_removal_depth) {
 					return this._find_a_word(part_of_speech, [word], semantic_removal_depth + 1);
 				}
 				return word;
@@ -52,6 +56,7 @@ class Nonsensical {
 
 	_make_noun() {
 		const noun = new Token({ partOfSpeech: { tag: TAG.NOUN } });
+		// TODO: make sure lemmas are lemmas
 		noun.lemma = this._find_a_word("noun", NOUNZ);
 		noun.partOfSpeech.number = choose([NUMBER.PLURAL, NUMBER.SINGULAR])
 		if (noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL) {
@@ -93,11 +98,15 @@ class Nonsensical {
 	_make_verb() {
 		const verb = new Token({ partOfSpeech: { tag: TAG.VERB } });
 		verb.lemma = this._find_a_word("verb", VERBZ);
+		// TODO: this should probably be at a later step,
+		// since it has to get overridden later in at least one case
 		if (Math.random() < 0.5) {
-			verb.text = tensify(verb.lemma).past;
-			// console.log(token.lemma, irregular(verb.lemma));
-			// verb.text = irregular(verb.lemma).PP;
+			verb.text = tensify_verb_phrase(verb.lemma, "past");
 			verb.partOfSpeech.tense = TENSE.PAST;
+		} else {
+			// Note: plural means _without_ an s
+			verb.text = tensify_verb_phrase(verb.lemma, "present_plural");
+			verb.partOfSpeech.tense = TENSE.PRESENT;
 		}
 		return verb;
 	};
@@ -106,10 +115,17 @@ class Nonsensical {
 		const root_verb = this._make_verb();
 		root_verb.label = "root";
 		const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
-		root_verb.addDependency(this._make_spicy_noun(), "nsubj");
-		root_verb.addDependency(this._make_spicy_noun(), "nobj");
-		root_verb.addDependency(this._make_adpositional_phrase(), "prep");
+		const subject_noun = this._make_spicy_noun();
+		const object_noun = this._make_spicy_noun();
+		root_verb.addDependency(subject_noun, "nsubj");
+		subject_noun.addDependency(this._make_adpositional_phrase(), "prep");
+		root_verb.addDependency(object_noun, "nobj");
 		root_verb.addDependency(ending_punctuation, "p");
+		if (root_verb.partOfSpeech.tense === TENSE.PRESENT) {
+			if (subject_noun.partOfSpeech.number === NUMBER.SINGULAR) {
+				root_verb.text = tensify_verb_phrase(root_verb.lemma, "present_singular");
+			}
+		}
 		return root_verb;
 	};
 
@@ -119,12 +135,16 @@ class Nonsensical {
 			const dep_flattened_tokens = this._make_flat_tokens_array_from_structure(dep_token);
 			const dep_tag = dep_token.partOfSpeech.tag;
 			const parent_tag = token.partOfSpeech.tag;
-			// console.log(`what order for ${parent_tag} (\`${this._stringify_tokens_array(tokens)}\`) and dep ${dep_tag} (\`${this._stringify_tokens_array(dep_flattened_tokens)}\`)?`, token, dep_token); 
+			// console.log(`what order for ${parent_tag} (\`${this._stringify_tokens_array(tokens)}\`) and dep ${dep_tag} (\`${this._stringify_tokens_array(dep_flattened_tokens)}\`)?`, token, dep_token);
 			let dep_after;
 			if (dep_tag === TAG.PUNCT || dep_tag === TAG.X) {
 				dep_after = true;
 			} else if (parent_tag === TAG.ADP) {
-				dep_after = false;
+				dep_after = true;
+			} else if (dep_tag === TAG.ADP) {
+				dep_after = true;
+				// for phrases like "the clock in the room"
+				// but there are also phrases like "in the room, there's a clock"
 			} else {
 				dep_after = (dep_tag === TAG.NOUN && dep_token.label === "nobj");
 			}

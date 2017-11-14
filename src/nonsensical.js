@@ -19,11 +19,13 @@ class Nonsensical {
 	constructor() {
 		this._wordnet = new Wordnet();
 	}
+
 	load(files, callback) {
 		// TODO: error handling
 		// the promise version of this probably implicitly supports error handling
 		this._wordnet.load(files, callback);
 	}
+
 	generateSentence(options = {}) {
 		this._word_suggestions = Object.assign({}, default_word_suggestions, options.wordSuggestions);
 		this._use_suggestion_related_word_chance = options.useSuggestionRelatedWordChance != null ?
@@ -34,7 +36,7 @@ class Nonsensical {
 		return this._generate_sentence();
 	}
 
-	_find_a_word(part_of_speech, search_base_terms, semantic_removal_depth = 0) {
+	_find_a_term(part_of_speech, search_base_terms, semantic_removal_depth = 0) {
 		if (!search_base_terms) {
 			// const word_suggestions_key = tag_to_suggestions_part_of_speech[tag];
 			const word_suggestions_key = part_of_speech + "s";
@@ -59,7 +61,7 @@ class Nonsensical {
 				let word = choose(result.words);
 				// TODO: maybe flatten this and do a random number of semantic removals (including zero)
 				if (Math.random() < 0.5 && semantic_removal_depth < this._max_semantic_steps_removed_from_suggestions) {
-					return this._find_a_word(part_of_speech, [word], semantic_removal_depth + 1);
+					return this._find_a_term(part_of_speech, [word], semantic_removal_depth + 1);
 				}
 				return word;
 			}
@@ -68,9 +70,11 @@ class Nonsensical {
 	}
 
 	_make_noun() {
-		const noun = new Token({ partOfSpeech: { tag: TAG.NOUN } });
-		// TODO: make sure lemmas are lemmas
-		noun.lemma = this._find_a_word("noun");
+		const noun = new Token({
+			partOfSpeech: { tag: TAG.NOUN },
+			// TODO: do something about the fact that these aren't necessarily single words and thus not really lemmas
+			lemma: this._find_a_term("noun"),
+		});
 		noun.partOfSpeech.number = choose([NUMBER.PLURAL, NUMBER.SINGULAR])
 		if (noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL) {
 			noun.text = pluralize.plural(noun.lemma);
@@ -78,7 +82,7 @@ class Nonsensical {
 			noun.text = pluralize.singular(noun.lemma);
 		}
 		return noun;
-	};
+	}
 
 	_make_spicy_noun() {
 		const noun = this._make_noun();
@@ -101,29 +105,36 @@ class Nonsensical {
 			// console.log(`using singular determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
 		}
 		return noun;
-	};
+	}
 
 	_make_adjective(){
-		const adjective = new Token({ partOfSpeech: { tag: TAG.ADJ } });
-		adjective.lemma = this._find_a_word("adjective");
-		return adjective;
+		return new Token({
+			partOfSpeech: { tag: TAG.ADJ },
+			lemma: this._find_a_term("adjective"),
+		});
 	}
 
 	_make_adpositional_phrase(recurse_depth = 0) {
 		const max_recurse_depth = 2;
-		const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
+		const preposition = new Token({
+			partOfSpeech: { tag: TAG.ADP },
+			lemma: choose(["in", "in", "in", "on", "of"]),
+		});
 		const preposition_object_noun = this._make_spicy_noun();
 		if(Math.random() < 0.1 && recurse_depth < max_recurse_depth){
 			preposition_object_noun.addDependency(this._make_adpositional_phrase(recurse_depth + 1), "prep");
 		}
-		preposition.lemma = choose(["in", "in", "in", "on", "of"]);
 		preposition.addDependency(preposition_object_noun, "pobj");
 		return preposition;
-	};
+	}
 
 	_make_verb() {
-		const verb = new Token({ partOfSpeech: { tag: TAG.VERB } });
-		verb.lemma = this._find_a_word("verb");
+		const verb = new Token({
+			partOfSpeech: { tag: TAG.VERB },
+			// TODO: detect when the term has multiple words and especially if it includes an object (like "express joy")
+			// maybe pass in the lemma from outside? idk, this whole system is kinda messy
+			lemma: this._find_a_term("verb"),
+		});
 		// TODO: this should probably be at a later step,
 		// since it has to get overridden later in at least one case
 		// Note: one piece of code stringifies a noun during generation in order to do a/an
@@ -132,11 +143,13 @@ class Nonsensical {
 			verb.partOfSpeech.tense = TENSE.PAST;
 		} else {
 			// Note: plural means _without_ an s
+			// FIXME: removes s's from words with double s's like access, toss, etc.
+			// but we do want to do normalization here ideally, especially for input from the app
 			verb.text = tensify_verb_phrase(verb.lemma, "present_plural");
 			verb.partOfSpeech.tense = TENSE.PRESENT;
 		}
 		return verb;
-	};
+	}
 
 	_make_structure() {
 		const root_verb = this._make_verb();
@@ -154,7 +167,7 @@ class Nonsensical {
 			}
 		}
 		return root_verb;
-	};
+	}
 
 	_make_flat_tokens_array_from_structure(token) {
 		let tokens = [token];
@@ -188,7 +201,7 @@ class Nonsensical {
 			// console.log(`going with ${dep_after ? "dep after" : "dep before"}  (\`${this._stringify_tokens_array(tokens)}\`)`);
 		}
 		return tokens;
-	};
+	}
 
 	_stringify_tokens_array(tokens) {
 		let text = "";
@@ -204,7 +217,7 @@ class Nonsensical {
 			text += token_text;
 		}
 		return text;
-	};
+	}
 
 	_generate_sentence() {
 		// if(!this._wordnet._is_loaded_()){
@@ -214,7 +227,7 @@ class Nonsensical {
 		const tokens_array = this._make_flat_tokens_array_from_structure(root_token);
 		const sentence = uppercase_first(this._stringify_tokens_array(tokens_array));
 		return sentence;
-	};
+	}
 
 }
 

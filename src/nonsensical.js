@@ -82,15 +82,19 @@ class Nonsensical {
 
 	_make_spicy_noun() {
 		const noun = this._make_noun();
-		const initial_noun_text = this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun));
 		const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
+		if(Math.random() < 0.5){
+			noun.addDependency(this._make_adjective(), "adj");
+		}
+		const noun_text_before_adding_determiner = this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun));
 		noun.addDependency(determiner, "det");
 		if (noun.partOfSpeech.number === NUMBER.PLURAL) {
 			determiner.text = choose(["some", "some", "those", "those", "the"]); // could include informal "them"/"dem"/"'em"
 			// console.log(`using plural determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
 		} else {
 			if (Math.random() < 0.5) {
-				determiner.text = get_indefinite_article(initial_noun_text);
+				// TODO: do this determination later?
+				determiner.text = get_indefinite_article(noun_text_before_adding_determiner);
 			} else {
 				determiner.text = "the";
 			}
@@ -98,6 +102,12 @@ class Nonsensical {
 		}
 		return noun;
 	};
+
+	_make_adjective(){
+		const adjective = new Token({ partOfSpeech: { tag: TAG.ADJ } });
+		adjective.lemma = this._find_a_word("adjective");
+		return adjective;
+	}
 
 	_make_adpositional_phrase() {
 		const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
@@ -112,6 +122,7 @@ class Nonsensical {
 		verb.lemma = this._find_a_word("verb");
 		// TODO: this should probably be at a later step,
 		// since it has to get overridden later in at least one case
+		// Note: one piece of code stringifies a noun during generation in order to do a/an
 		if (Math.random() < 0.5) {
 			verb.text = tensify_verb_phrase(verb.lemma, "past");
 			verb.partOfSpeech.tense = TENSE.PAST;
@@ -157,6 +168,10 @@ class Nonsensical {
 				dep_after = true;
 				// for phrases like "the clock in the room"
 				// but there are also phrases like "in the room, there's a clock"
+			} else if (dep_tag === TAG.ADJ) {
+				// adjectives prospective may be ordered poetic / poetic, reversed, and aft
+				// that would be with a flag, you see / not just global, no don't be daft
+				dep_after = false;
 			} else {
 				dep_after = (dep_tag === TAG.NOUN && dep_token.label === "nobj");
 			}

@@ -29,25 +29,18 @@ the apparent structure might end up different than intended.
 
 ### Sample Output
 
-> Some codes of the void air a nihility.  
-> Those nihilities in the verb pass those estimators.  
-> The noun in those spaces exhibitted the pragmatism.  
-> A world on the dimension placed the metres.  
-> Those regular hexahedra in the distances scromble some times.  
-> A reckoner on those third powers frames the noun.
-> Some entities in some cubes render the electronic computer.
-> The graphic in those cubes uploads an attribute.
-> Those texts in the texts bring forth those spaces.
-> Those pillars in a data processor became an orang.
-> The production on the outputs goes past a Pongo pygmaeus.
-> Some anchors in the turnouts transgress the reality.
+> A secret plot in the charming saddle block anesthesias slammed those lacrimal sacs.  
+> An enlisted woman on the adductive pitch blackness navigated an animatism.  
+> Some spatula-shaped floricultures on the trap destressed the bad park.  
+> A fight in a Malaysian straightenned some rosy-colored flags.  
+> The imbricated throat in an alarming fire brigade queried a Circassian.  
+> Some affixal icicles in a wintertime erred some white yams.  
+> The virtuous sweetener in the ambulatory vase glorifies a downmarket graveyard.  
+> Those cherries in a flying iron boot pursue some Plautuses.  
+> Some stingy snows in those scriptural contraptions construct a Lygodium palmatum.  
 
-So far it's somewhat homogeneous. There's only *one sentence structure* output!
-(DET NOUN PREP DET NOUN VERB DET NOUN PUNCT)
+In [the app](https://1j01.itch.io/nonsensical) you can mess around with giving it seed/suggestion/topic words.
 
-But it's already fun.
-In [the app](https://1j01.itch.io/nonsensical) currently uses seed words themed around [r/SurrealMemes](https://www.reddit.com/r/surrealmemes/)
-and computers.
 
 ## Install
 
@@ -97,7 +90,7 @@ nonsensical.load(dataFilePaths, function () {
 		wordSuggestions: {
 			nouns: ["cat", "kitty", "mouse", "fur", "bird", "house"],
 			verbs: ["purr", "pet", "hiss", "catch", "chase", "sleep"],
-			adjectives: ["soft", "warm"] // not used yet!
+			adjectives: ["soft", "warm"]
 		},
 		useSuggestionRelatedWordChance: 1/2,
 		maxSemanticStepsRemovedFromSuggestions: 3

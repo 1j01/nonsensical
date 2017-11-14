@@ -8,7 +8,7 @@ const toggle_config_button = document.getElementById("toggle-config");
 const config_container = document.getElementById("config");
 const nouns_input = document.getElementById("nouns");
 const verbs_input = document.getElementById("verbs");
-// const adjectives_input = document.getElementById("adjectives");
+const adjectives_input = document.getElementById("adjectives");
 // const presets_select = document.getElementById("presets");
 // const use_suggestion_chance_slider = document.getElementById("use-suggestion-chance");
 
@@ -44,7 +44,7 @@ nonsensical.load(data_file_paths, function () {
 			wordSuggestions: {
 				nouns: split_words(nouns_input.value),
 				verbs: split_words(verbs_input.value),
-				// adjectives: split_words(adjectives_input.value),
+				adjectives: split_words(adjectives_input.value),
 			},
 			useSuggestionRelatedWordChance: 1 / 2,//parseFloat(use_suggestion_chance_slider.value) / 100,
 			maxSemanticStepsRemovedFromSuggestions: 5
@@ -62,8 +62,4 @@ nonsensical.load(data_file_paths, function () {
 	render_from_hash();
 
 	another_one_button.onclick = another_one;
-
-	// previous_one_button.onclick = ()=> {
-	// 	history.back();
-	// };
 });

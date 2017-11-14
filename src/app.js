@@ -4,7 +4,6 @@ const nonsensical = new Nonsensical();
 const loading_indicator = document.getElementById("loading-indicator");
 const output_container = document.getElementById("output");
 const another_one_button = document.getElementById("another-one");
-// const previous_one_button = document.getElementById("previous-one");
 const toggle_config_button = document.getElementById("toggle-config");
 const config_container = document.getElementById("config");
 const nouns_input = document.getElementById("nouns");
@@ -21,26 +20,12 @@ const data_file_paths = {
 };
 
 toggle_config_button.onclick = () => {
-	// if (config_container.hasAttribute("hidden")) {
-	// 	config_container.removeAttribute("hidden");
-	// } else {
-	// 	config_container.setAttribute("hidden", "hidden");
-	// }
-
-	// config_container.style.flexBasis = config_container.clientHeight + "px";
-	// config_container.classList.toggle("hidden");
-	// config_container.style.flexBasis = "";
-
-	
 	if(config_container.classList.contains("hidden")){
 		config_container.style.height = "0px";
-		// config_container.style.flexBasis = "0.001px";
 		config_container.classList.remove("hidden");
-		// config_container.style.flexBasis = config_container.scrollHeight + "px";
 		config_container.style.height = config_container.scrollHeight + "px";
 	}else{
 		config_container.classList.add("hidden");
-		// config_container.style.flexBasis = "0.001px";
 		config_container.style.height = "0px";
 	}
 };

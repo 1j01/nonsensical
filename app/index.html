@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Nonsensical text generator</title>
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
 </head>
 <body>
 	<div id="loading-indicator" hidden>
@@ -13,13 +14,51 @@
 	<div id="app">
 		<div id="output"></div>
 		<div id="controls">
-			<!-- <div id="extra-controls">
-				<input type="text" value="" />
-			</div> -->
+			<div id="config" class="hidden">
+				<!-- music preset: -->
+				<!-- music guitar piano drum harp harpsichord DAW audio waveform remix reverb mix trumpet bass singer musician guitarist drummer bassist studio effect sound scale tune melody bassline -->
+				<!-- reverberate echo remix play jam sing hum whistle strum exercise -->
+				<!-- major minor complex simple loud soft gnarly sweet sharp flat -->
+				<!-- <p>Suggest words to be incorporated into the output, seperated by spaces and/or commas:</p> -->
+
+				<!-- surrealmemes/computers preset(s): -->
+				<!-- <input id="nouns" type="text" value="keyboard, output, code, graphic, computer, screen, text, orang, meme man, vegetal, cube, dimension, hypercube, pillar, space, time, reality, entity, void, meme" /> -->
+				<!-- <input id="verbs" type="text" value="type, output, generate, put, display, render, upload, consume, transcend, ascend, assemble, scromble, scronch, become, fear" /> -->
+				<!-- <input id="adjectives" type="text" value="aesthetic, surreal, hyperdimensional, human, real, true, cuboid, cool, good, cool and good, ANGERY" /> -->
+
+				<!-- <p>Influence the output with topical words, separated by spaces and/or commas:</p> -->
+				<p>Influence the output with <b>topical words</b>, separated by spaces:</p>
+				<div id="word-suggestions">
+					<div class="form-row">
+						<label for="nouns">Nouns:</label>
+						<input id="nouns" type="text" value="" />
+					</div>
+					<div class="form-row">
+						<label for="verbs">Verbs:</label>
+						<input id="verbs" type="text" value="" />
+					</div>
+					<!-- <div class="form-row">
+						<label for="adjectives">Adjectives:</label>
+						<input id="adjectives" type="text" value="" />
+					</div> -->
+				</div>
+				<!-- <label for="presets">Preset:</label> -->
+				<!-- <select id="presets">
+					<option name="" value=""></option>
+				</select> -->
+				<!-- <input id="use-suggestion-chance" type="range" value="50" min="0" max="100"> -->
+			</div>
 			<!-- <button id="previous-one">
 				◀&#xFE0E; <!- - modifier prevents display as emoji - ->
 			</button> -->
-			<button id="another-one" class="primary">Generate</button>
+			<div id="buttons">
+				<button id="toggle-config" aria-label="Customize">
+					⚙&#xFE0E; <!-- modifier prevents display as emoji -->
+					<!-- Customize -->
+				</button><button id="another-one" class="primary">
+					Generate
+				</button>
+			</div>
 		</div>
 	</div>
 	<style>
@@ -34,14 +73,17 @@
 			font-size: 3em;
 			height: 1em;
 		}
+		html, body, #app {
+			height: 100%;
+			margin: 0;
+		}
 		body {
 			text-align: center;
 			background: white; /* for itch.io */
 			color: black;
-		}
-		html, body, #app {
-			height: 100%;
-			margin: 0;
+			font-family: sans-serif;
+			max-width: 700px;
+			margin: 0 auto;
 		}
 		#app {
 			display: flex;
@@ -49,18 +91,51 @@
 		}
 		#output {
 			align-self: center;
+			flex: 4;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			/* justify-content: flex-end; */
 			margin: 1em;
 			font-size: 50px;
-			max-width: 20em;
-			flex: 4;
+			font-family: 'PT Serif', serif;
 		}
 		#controls {
-			flex: 1 0 auto;
+			flex: 0 0 auto;
+			/* display: flex; */
+			/* flex-direction: column; */
+			margin: 30px;
 		}
+		#config {
+			padding: 30px 0;
+			position: relative;
+			transition: height 0.5s ease-out, opacity 0.3s ease-out;
+			/* transition: all .5s ease-out; */
+			/* top: 0; */
+			/* flex: 0 0 auto; */
+			/* flex: 0 0 0.001px; */
+			overflow: hidden;
+			box-sizing: border-box;
+			border-top: 1px solid rgba(128, 128, 128, 0.4);
+		}
+		#config.hidden {
+			/* flex: 0.0001; */
+			/* height: 0; */
+			/* flex-basis: 0.001px; */
+			/* padding: 0; */ /* eh, it's okay if this takes up a bit of space when hidden */
+			/* height: 0; */
+			opacity: 0;
+			pointer-events: none;
+		}
+		/* #config::before {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 0;
+			left: -50px;
+			right: -50px;
+			border-top: 1px solid rgba(128, 128, 128, 0.377);
+		} */
 		button {
 			user-select: none;
 			font-size: 35px;
@@ -80,17 +155,31 @@
 		button:active {
 			/* FIXME: affects clickable area; it can appear you click on it but not work */
 			transform: translate(0, 3px);
-			box-shadow: 0 0 0 3px white, 0 0 0 6px lime !important;
+			box-shadow: none !important;
 		}
 		button.primary:active {
-			background: lime;
-			color: black;
-			text-shadow: 1px 2px 0 white;
+			background: rgb(0, 129, 235);
+			text-shadow: 1px 2px 0 rgb(54, 54, 54);
 		}
 		button:focus {
 			outline: none;
-			box-shadow: 0 0 0 3px white, 0 0 0 6px orange;
-			box-shadow: 0 0 0 3px white, 0 0 0 6px Highlight;
+			box-shadow: 0 0 0 3px white, 0 0 0 4px orange;
+			box-shadow: 0 0 0 3px white, 0 0 0 4px Highlight;
+		}
+		.form-row {
+			display: flex;
+			flex-direction: column;
+		}
+		.form-row input {
+			flex: 1;
+		}
+		.form-row label {
+			/* flex-basis: 10em; */
+			text-align: left;
+		}
+		.form-row input,
+		.form-row label {
+			margin: 5px;
 		}
 	</style>
 	<script src="build/app-bundle.js"></script>

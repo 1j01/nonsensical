@@ -5,6 +5,13 @@ const loading_indicator = document.getElementById("loading-indicator");
 const output_container = document.getElementById("output");
 const another_one_button = document.getElementById("another-one");
 // const previous_one_button = document.getElementById("previous-one");
+const toggle_config_button = document.getElementById("toggle-config");
+const config_container = document.getElementById("config");
+const nouns_input = document.getElementById("nouns");
+const verbs_input = document.getElementById("verbs");
+// const adjectives_input = document.getElementById("adjectives");
+// const presets_select = document.getElementById("presets");
+// const use_suggestion_chance_slider = document.getElementById("use-suggestion-chance");
 
 const data_file_paths = {
 	noun: './data/noun.json',
@@ -13,9 +20,32 @@ const data_file_paths = {
 	verb: './data/verb.json',
 };
 
-const SOME_VERBS = ["keyboard", "output", "generate", "put", "display", "render", "upload", "consume", "transcend", "ascend", "assemble", "scromble", "scronch", "become", "fear"];
-const SOME_NOUNS = ["type", "output", "code", "graphic", "computer", "screen", "text", "orang", "meme man", "vegetal", "cube", "dimension", "hypercube", "pillar", "space", "time", "reality", "entity", "void", "meme"];
-const SOME_ADJECTIVES = ["aesthetic", "surreal", "hyperdimensional", "human", "real", "true", "cuboid", "cool", "good", "cool and good", "ANGERY"];
+toggle_config_button.onclick = () => {
+	// if (config_container.hasAttribute("hidden")) {
+	// 	config_container.removeAttribute("hidden");
+	// } else {
+	// 	config_container.setAttribute("hidden", "hidden");
+	// }
+
+	// config_container.style.flexBasis = config_container.clientHeight + "px";
+	// config_container.classList.toggle("hidden");
+	// config_container.style.flexBasis = "";
+
+	
+	if(config_container.classList.contains("hidden")){
+		config_container.style.height = "0px";
+		// config_container.style.flexBasis = "0.001px";
+		config_container.classList.remove("hidden");
+		// config_container.style.flexBasis = config_container.scrollHeight + "px";
+		config_container.style.height = config_container.scrollHeight + "px";
+	}else{
+		config_container.classList.add("hidden");
+		// config_container.style.flexBasis = "0.001px";
+		config_container.style.height = "0px";
+	}
+};
+
+const split_words = (input_text) => input_text.split(/[,\s]\s*/);
 
 loading_indicator.removeAttribute("hidden");
 nonsensical.load(data_file_paths, function () {
@@ -27,11 +57,11 @@ nonsensical.load(data_file_paths, function () {
 	const another_one = () => {
 		location.hash = nonsensical.generateSentence({
 			wordSuggestions: {
-				nouns: SOME_NOUNS,
-				verbs: SOME_VERBS,
-				adjectives: SOME_ADJECTIVES,
+				nouns: split_words(nouns_input.value),
+				verbs: split_words(verbs_input.value),
+				// adjectives: split_words(adjectives_input.value),
 			},
-			useSuggestionRelatedWordChance: 1,
+			useSuggestionRelatedWordChance: 1 / 2,//parseFloat(use_suggestion_chance_slider.value) / 100,
 			maxSemanticStepsRemovedFromSuggestions: 5
 		});
 	};

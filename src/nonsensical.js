@@ -109,9 +109,13 @@ class Nonsensical {
 		return adjective;
 	}
 
-	_make_adpositional_phrase() {
+	_make_adpositional_phrase(recurse_depth = 0) {
+		const max_recurse_depth = 2;
 		const preposition = new Token({ partOfSpeech: { tag: TAG.ADP } });
 		const preposition_object_noun = this._make_spicy_noun();
+		if(Math.random() < 0.1 && recurse_depth < max_recurse_depth){
+			preposition_object_noun.addDependency(this._make_adpositional_phrase(recurse_depth + 1), "prep");
+		}
 		preposition.lemma = choose(["in", "in", "in", "on", "of"]);
 		preposition.addDependency(preposition_object_noun, "pobj");
 		return preposition;

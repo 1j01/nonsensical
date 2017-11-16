@@ -28,6 +28,10 @@ class Nonsensical {
 
 	generateSentence(options = {}) {
 		this._word_suggestions = Object.assign({}, default_word_suggestions, options.wordSuggestions);
+		for(let key in this._word_suggestions){
+			this._word_suggestions[key] = this._word_suggestions[key].filter((suggestion)=> suggestion);
+		}
+
 		this._use_suggestion_related_word_chance = options.useSuggestionRelatedWordChance != null ?
 			options.useSuggestionRelatedWordChance : default_use_suggestion_related_word_chance;
 		this._max_semantic_steps_removed_from_suggestions = options.maxSemanticStepsRemovedFromSuggestions != null ?
@@ -40,13 +44,13 @@ class Nonsensical {
 		if (!search_base_terms) {
 			// const word_suggestions_key = tag_to_suggestions_part_of_speech[tag];
 			const word_suggestions_key = part_of_speech + "s";
-			if (Math.random() < this._use_suggestion_related_word_chance) {
+			if (Math.random() < this._use_suggestion_related_word_chance && this._word_suggestions[word_suggestions_key].length) {
 				search_base_terms = this._word_suggestions[word_suggestions_key];
 			} else {
 				search_base_terms = default_word_suggestions[word_suggestions_key];
 			}
 		}
-		if (this._max_semantic_steps_removed_from_suggestions < 1) {
+		if (Math.random() < 0.7 || this._max_semantic_steps_removed_from_suggestions < 1) {
 			return choose(search_base_terms);
 		}
 		// const part_of_speech = tag_to_wordnet_part_of_speech[tag];
@@ -86,23 +90,39 @@ class Nonsensical {
 
 	_make_spicy_noun() {
 		const noun = this._make_noun();
-		const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
+		// TODO: compound nouns
 		if(Math.random() < 0.5){
 			noun.addDependency(this._make_adjective(), "adj");
 		}
-		const noun_text_before_adding_determiner = this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun));
-		noun.addDependency(determiner, "det");
-		if (noun.partOfSpeech.number === NUMBER.PLURAL) {
-			determiner.text = choose(["some", "some", "those", "those", "the"]); // could include informal "them"/"dem"/"'em"
-			// console.log(`using plural determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
-		} else {
-			if (Math.random() < 0.5) {
-				// TODO: do this determination later?
-				determiner.text = get_indefinite_article(noun_text_before_adding_determiner);
-			} else {
-				determiner.text = "the";
+		const det_chance = noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL ?
+			0.7 : 1;
+		// TODO: pronouns/possessives
+		if(Math.random() < det_chance){
+			const noun_text_before_adding_determiner = this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun));
+			const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
+			noun.addDependency(determiner, "det");
+			if (noun.partOfSpeech.number === NUMBER.PLURAL) {
+				determiner.text = choose([
+					"some", "some",
+					"those", "those",
+					"the", "the", "the",
+					"many", "both", "a couple", "a few",
+					// could include informal "them"/"dem"/"'em"; 'em would warrant better capitaliZation rools
+					// "each" would need a singular noun or a preposition
+				]);
+				// console.log(`using plural determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
+			} else if(noun.partOfSpeech.number === NUMBER.DUAL) {
+				// DUAL is not really a thing in English, but it'd be something like this:
+				determiner.text = choose(["the", "both"]);
+			}else {
+				if (Math.random() < 0.5) {
+					// TODO: do this determination later?
+					determiner.text = get_indefinite_article(noun_text_before_adding_determiner);
+				} else {
+					determiner.text = "the";
+				}
+				// console.log(`using singular determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
 			}
-			// console.log(`using singular determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
 		}
 		return noun;
 	}
@@ -152,13 +172,17 @@ class Nonsensical {
 	}
 
 	_make_structure() {
+		// TODO: compound verbs, compound sentences
+		// TODO: adverbs
 		const root_verb = this._make_verb();
 		root_verb.label = "root";
 		const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
 		const subject_noun = this._make_spicy_noun();
 		const object_noun = this._make_spicy_noun();
 		root_verb.addDependency(subject_noun, "nsubj");
-		subject_noun.addDependency(this._make_adpositional_phrase(), "prep");
+		if(Math.random() < 0.5){
+			subject_noun.addDependency(this._make_adpositional_phrase(), "prep");
+		}
 		root_verb.addDependency(object_noun, "nobj");
 		root_verb.addDependency(ending_punctuation, "p");
 		if (root_verb.partOfSpeech.tense === TENSE.PRESENT) {

@@ -1,14 +1,14 @@
 const Nonsensical = require("./nonsensical");
 const nonsensical = new Nonsensical();
 global.window = {
-	fetch: (path)=> {
-		return new Promise(function(resolve, reject){
-			require("fs").readFile(path, "utf8", function(err, data){
-				if(err){
+	fetch: (path) => {
+		return new Promise(function (resolve, reject) {
+			require("fs").readFile(path, "utf8", function (err, data) {
+				if (err) {
 					reject(err);
-				}else{
+				} else {
 					resolve({
-						json: ()=> JSON.parse(data)
+						json: () => JSON.parse(data)
 					});
 				}
 			});
@@ -21,6 +21,6 @@ const data_file_paths = {
 	adjective: './data/adjective.json',
 	verb: './data/verb.json',
 };
-nonsensical.load(data_file_paths, function(){
+nonsensical.load(data_file_paths, function () {
 	console.log(nonsensical.generateSentence());
 });

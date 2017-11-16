@@ -28,8 +28,8 @@ class Nonsensical {
 
 	generateSentence(options = {}) {
 		this._word_suggestions = Object.assign({}, default_word_suggestions, options.wordSuggestions);
-		for(let key in this._word_suggestions){
-			this._word_suggestions[key] = this._word_suggestions[key].filter((suggestion)=> suggestion);
+		for (let key in this._word_suggestions) {
+			this._word_suggestions[key] = this._word_suggestions[key].filter((suggestion) => suggestion);
 		}
 
 		this._use_suggestion_related_word_chance = options.useSuggestionRelatedWordChance != null ?
@@ -91,13 +91,13 @@ class Nonsensical {
 	_make_spicy_noun() {
 		const noun = this._make_noun();
 		// TODO: compound nouns
-		if(Math.random() < 0.5){
+		if (Math.random() < 0.5) {
 			noun.addDependency(this._make_adjective(), "adj");
 		}
 		const det_chance = noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL ?
 			0.7 : 1;
 		// TODO: pronouns/possessives
-		if(Math.random() < det_chance){
+		if (Math.random() < det_chance) {
 			const noun_text_before_adding_determiner = this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun));
 			const determiner = new Token({ partOfSpeech: { tag: TAG.DET } });
 			noun.addDependency(determiner, "det");
@@ -111,10 +111,10 @@ class Nonsensical {
 					// "each" would need a singular noun or a preposition
 				]);
 				// console.log(`using plural determiner: \`${this._stringify_tokens_array(this._make_flat_tokens_array_from_structure(noun))}\` for`, noun);
-			} else if(noun.partOfSpeech.number === NUMBER.DUAL) {
+			} else if (noun.partOfSpeech.number === NUMBER.DUAL) {
 				// DUAL is not really a thing in English, but it'd be something like this:
 				determiner.text = choose(["the", "both"]);
-			}else {
+			} else {
 				if (Math.random() < 0.5) {
 					// TODO: do this determination later?
 					determiner.text = get_indefinite_article(noun_text_before_adding_determiner);
@@ -127,7 +127,7 @@ class Nonsensical {
 		return noun;
 	}
 
-	_make_adjective(){
+	_make_adjective() {
 		return new Token({
 			partOfSpeech: { tag: TAG.ADJ },
 			lemma: this._find_a_term("adjective"),
@@ -141,7 +141,7 @@ class Nonsensical {
 			lemma: choose(["in", "in", "in", "on", "of"]),
 		});
 		const preposition_object_noun = this._make_spicy_noun();
-		if(Math.random() < 0.1 && recurse_depth < max_recurse_depth){
+		if (Math.random() < 0.1 && recurse_depth < max_recurse_depth) {
 			preposition_object_noun.addDependency(this._make_adpositional_phrase(recurse_depth + 1), "prep");
 		}
 		preposition.addDependency(preposition_object_noun, "pobj");
@@ -180,7 +180,7 @@ class Nonsensical {
 		const subject_noun = this._make_spicy_noun();
 		const object_noun = this._make_spicy_noun();
 		root_verb.addDependency(subject_noun, "nsubj");
-		if(Math.random() < 0.5){
+		if (Math.random() < 0.5) {
 			subject_noun.addDependency(this._make_adpositional_phrase(), "prep");
 		}
 		root_verb.addDependency(object_noun, "nobj");

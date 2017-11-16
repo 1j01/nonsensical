@@ -20,11 +20,11 @@ const data_file_paths = {
 };
 
 toggle_config_button.onclick = () => {
-	if(config_container.classList.contains("hidden")){
+	if (config_container.classList.contains("hidden")) {
 		config_container.style.height = "0px";
 		config_container.classList.remove("hidden");
 		config_container.style.height = config_container.scrollHeight + "px";
-	}else{
+	} else {
 		config_container.classList.add("hidden");
 		config_container.style.height = "0px";
 	}

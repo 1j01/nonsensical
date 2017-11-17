@@ -92,6 +92,7 @@ class Nonsensical {
 		const noun = this._make_noun();
 		// TODO: compound nouns
 		if (Math.random() < 0.5) {
+			// TODO: use an enum for all labels
 			noun.addDependency(this._make_adjective(), "adj");
 		}
 		const det_chance = noun.partOfSpeech.number === NUMBER.PLURAL || noun.partOfSpeech.number === NUMBER.DUAL ?
@@ -134,6 +135,13 @@ class Nonsensical {
 		});
 	}
 
+	_make_adverb() {
+		return new Token({
+			partOfSpeech: { tag: TAG.ADV },
+			lemma: this._find_a_term("adverb"),
+		});
+	}
+
 	_make_adpositional_phrase(recurse_depth = 0) {
 		const max_recurse_depth = 2;
 		const preposition = new Token({
@@ -173,16 +181,18 @@ class Nonsensical {
 
 	_make_structure() {
 		// TODO: compound verbs, compound sentences
-		// TODO: adverbs
 		const root_verb = this._make_verb();
 		root_verb.label = "root";
 		const ending_punctuation = new Token({ partOfSpeech: { tag: TAG.PUNCT }, text: "." });
 		const subject_noun = this._make_spicy_noun();
 		const object_noun = this._make_spicy_noun();
+		// TODO: adverbs after object sometimes too
+		root_verb.addDependency(this._make_adverb(), "advmod");
 		root_verb.addDependency(subject_noun, "nsubj");
 		if (Math.random() < 0.5) {
 			subject_noun.addDependency(this._make_adpositional_phrase(), "prep");
 		}
+		// TODO: handle intransitive verbs (no direct object)
 		root_verb.addDependency(object_noun, "nobj");
 		root_verb.addDependency(ending_punctuation, "p");
 		if (root_verb.partOfSpeech.tense === TENSE.PRESENT) {

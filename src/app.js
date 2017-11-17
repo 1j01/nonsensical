@@ -9,6 +9,7 @@ const config_container = document.getElementById("config");
 const nouns_input = document.getElementById("nouns");
 const verbs_input = document.getElementById("verbs");
 const adjectives_input = document.getElementById("adjectives");
+const adverbs_input = document.getElementById("adverbs");
 // const presets_select = document.getElementById("presets");
 // const use_suggestion_chance_slider = document.getElementById("use-suggestion-chance");
 
@@ -45,6 +46,7 @@ nonsensical.load(data_file_paths, function () {
 				nouns: split_words(nouns_input.value),
 				verbs: split_words(verbs_input.value),
 				adjectives: split_words(adjectives_input.value),
+				adverbs: split_words(adverbs_input.value),
 			},
 			useSuggestionRelatedWordChance: 1 / 2,//parseFloat(use_suggestion_chance_slider.value) / 100,
 			maxSemanticStepsRemovedFromSuggestions: 5
